@@ -147,7 +147,7 @@ public class CA1_sba23313 {
 
                 switch (choice) {
                     case 1:
-                        processFileData("C:\\Users\\palic\\Desktop\\CCT\\Semester 1\\Programming_Object Orented Approach\\CA1\\students.txt"); // Assuming file in current directory
+                        processFileData("C:\\Users\\palic\\Desktop\\CCT\\Semester 1\\Programming_Object Orented Approach\\CA1\\students.txt"); 
                         break;
                     case 2:
                         addData(scanner);
