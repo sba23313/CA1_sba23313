@@ -35,27 +35,27 @@ public class CA1_sba23313 {
     private static boolean validateData(String firstName, String secondName, int numberOfClasses, String studentNumber) {
         // Validates the input data based on given criteria
         if (!firstName.matches("[a-zA-Z]+")) {
-            displayErrorMessage("Invalid first name. The first name should only contain letters (A-Z, a-z)");
+            errorMessage("Invalid first name. The first name should only contain letters (A-Z, a-z)");
             return false;
         }
         if (!secondName.matches("[a-zA-Z0-9 ]+")) {
-            displayErrorMessage("Invalid second name. The second name can contain letters (A-Z, a-z), numbers (0-9), and spaces.");
+            errorMessage("Invalid second name. The second name can contain letters (A-Z, a-z), numbers (0-9), and spaces.");
             return false;
         }
         if (numberOfClasses < 1 || numberOfClasses > 8) {
-            displayErrorMessage("Invalid number of classes. Please choose from 1 to 8.");
+            errorMessage("Invalid number of classes. Please choose from 1 to 8.");
             return false;
         }
         // Check student number format
         if (!studentNumber.matches("^\\d{2}[a-zA-Z]{2,3}\\d+$")) {
-            displayErrorMessage("Invalid student number format. The format should be: 2 digits, followed by 2 to 3 letters, and then numbers.");
+            errorMessage("Invalid student number format. The format should be: 2 digits, followed by 2 to 3 letters, and then numbers.");
             return false;
         }
 
         // Check if the year in the student number is 20 or higher
         int startingYear = Integer.parseInt(studentNumber.substring(0, 2));
         if (startingYear < 20) {
-            displayErrorMessage("Student number year must start with 20 or higher");
+            errorMessage("Student number year must start with 20 or higher");
             return false;
         }
 
@@ -63,7 +63,7 @@ public class CA1_sba23313 {
         String numericPart = studentNumber.replaceAll("[^0-9]", "");
         int numericPartValue = Integer.parseInt(numericPart.substring(2));
         if (numericPartValue < 1 || numericPartValue > 200) {
-            displayErrorMessage("Student number's numeric part must be between 1 and 200");
+            errorMessage("Student number's numeric part must be between 1 and 200");
             return false;
         }
         return true;
@@ -122,7 +122,7 @@ public class CA1_sba23313 {
         System.out.print("First Name: ");
         String firstName = scanner.nextLine();
         if (!firstName.matches("[a-zA-Z]+")) {
-            displayErrorMessage("Invalid first name. The first name should only contain letters.");
+            errorMessage("Invalid first name. The first name should only contain letters.");
             return;
         }
 
@@ -130,14 +130,14 @@ public class CA1_sba23313 {
         System.out.print("Second Name: ");
         String secondName = scanner.nextLine();
         if (!secondName.matches("[a-zA-Z0-9 ]+")) {
-            displayErrorMessage("Invalid second name. The second name can contain letters and numbers.");
+            errorMessage("Invalid second name. The second name can contain letters and numbers.");
             return;
         }
 
         // Get and validate the number of classes
         System.out.print("Number of Classes (1-8): ");
         if (!scanner.hasNextInt()) {
-            displayErrorMessage("Invalid input for number of classes. Please enter an integer.");
+            errorMessage("Invalid input for number of classes. Please enter an integer.");
             scanner.nextLine();
             return;
         }
@@ -145,7 +145,7 @@ public class CA1_sba23313 {
         scanner.nextLine();
 
         if (numberOfClasses < 1 || numberOfClasses > 8) {
-            displayErrorMessage("Invalid number of classes. Please choose from 1 to 8.");
+            errorMessage("Invalid number of classes. Please choose from 1 to 8.");
             return;
         }
 
@@ -155,5 +155,9 @@ public class CA1_sba23313 {
         if (validateData(firstName, secondName, numberOfClasses, studentNumber)) {
             writeDataToFile(studentNumber, secondName, numberOfClasses);
         }
+        
+        private static void errorMessage(String error) {
+        System.out.println("Error: " + error);
+    }
 
 }
