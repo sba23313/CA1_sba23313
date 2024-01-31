@@ -9,6 +9,7 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
@@ -21,52 +22,8 @@ public class CA1_sba23313 {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
-    private static void writeDataToFile(String studentNumber, String secondName, int numberOfClasses) {
-        // Writes the validated data to "status.txt" file
-        String workload = typeWorkload(numberOfClasses);
-        try ( BufferedWriter writer = new BufferedWriter(new FileWriter("status.txt", true))) {
-            writer.write(studentNumber + " - " + secondName + "\n" + workload + "\n");
-        } catch (Exception e) {
-            System.out.println("An error occurred while writing to the file.");
-        }
-    }
-
-    private static boolean validateData(String firstName, String secondName, int numberOfClasses, String studentNumber) {
-        // Validates the input data based on given criteria
-        if (!firstName.matches("[a-zA-Z]+")) {
-            errorMessage("Invalid first name. The first name should only contain letters (A-Z, a-z)");
-            return false;
-        }
-        if (!secondName.matches("[a-zA-Z0-9 ]+")) {
-            errorMessage("Invalid second name. The second name can contain letters (A-Z, a-z), numbers (0-9), and spaces.");
-            return false;
-        }
-        if (numberOfClasses < 1 || numberOfClasses > 8) {
-            errorMessage("Invalid number of classes. Please choose from 1 to 8.");
-            return false;
-        }
-        // Check student number format
-        if (!studentNumber.matches("^\\d{2}[a-zA-Z]{2,3}\\d+$")) {
-            errorMessage("Invalid student number format. The format should be: 2 digits, followed by 2 to 3 letters, and then numbers.");
-            return false;
-        }
-
-        // Check if the year in the student number is 20 or higher
-        int startingYear = Integer.parseInt(studentNumber.substring(0, 2));
-        if (startingYear < 20) {
-            errorMessage("Student number year must start with 20 or higher");
-            return false;
-        }
-
-        // Check if the numeric part at the end is between 1 and 200
-        String numericPart = studentNumber.replaceAll("[^0-9]", "");
-        int numericPartValue = Integer.parseInt(numericPart.substring(2));
-        if (numericPartValue < 1 || numericPartValue > 200) {
-            errorMessage("Student number's numeric part must be between 1 and 200");
-            return false;
-        }
-        return true;
+        // Calls the userMenu method to start.
+        userMenu();
     }
 
     private static void processFileData(String filePath) {
@@ -114,6 +71,100 @@ public class CA1_sba23313 {
         }
     }
 
+    private static boolean validateData(String firstName, String secondName, int numberOfClasses, String studentNumber) {
+        // Validates the input data based on given criteria
+        if (!firstName.matches("[a-zA-Z]+")) {
+            errorMessage("Invalid first name. The first name should only contain letters (A-Z, a-z)");
+            return false;
+        }
+        if (!secondName.matches("[a-zA-Z0-9 ]+")) {
+            errorMessage("Invalid second name. The second name can contain letters (A-Z, a-z), numbers (0-9), and spaces.");
+            return false;
+        }
+        if (numberOfClasses < 1 || numberOfClasses > 8) {
+            errorMessage("Invalid number of classes. Please choose from 1 to 8.");
+            return false;
+        }
+        // Check student number format
+        if (!studentNumber.matches("^\\d{2}[a-zA-Z]{2,3}\\d+$")) {
+            errorMessage("Invalid student number format. The format should be: 2 digits, followed by 2 to 3 letters, and then numbers.");
+            return false;
+        }
+
+        // Check if the year in the student number is 20 or higher
+        int startingYear = Integer.parseInt(studentNumber.substring(0, 2));
+        if (startingYear < 20) {
+            errorMessage("Student number year must start with 20 or higher");
+            return false;
+        }
+
+        // Check if the numeric part at the end is between 1 and 200
+        String numericPart = studentNumber.replaceAll("[^0-9]", "");
+        int numericPartValue = Integer.parseInt(numericPart.substring(2));
+        if (numericPartValue < 1 || numericPartValue > 200) {
+            errorMessage("Student number's numeric part must be between 1 and 200");
+            return false;
+        }
+        return true;
+    }
+
+    private static void writeDataToFile(String studentNumber, String secondName, int numberOfClasses) {
+        // Writes the validated data to "status.txt" file
+        String workload = typeWorkload(numberOfClasses);
+        try ( BufferedWriter writer = new BufferedWriter(new FileWriter("status.txt", true))) {
+            writer.write(studentNumber + " - " + secondName + "\n" + workload + "\n");
+        } catch (Exception e) {
+            System.out.println("An error occurred while writing to the file.");
+        }
+    }
+
+    private static String typeWorkload(int numberOfClasses) {
+        // Determines the workload based on the number of classes
+        if (numberOfClasses == 1) {
+            return "Very Light";
+        }
+        if (numberOfClasses == 2) {
+            return "Light";
+        }
+        if (numberOfClasses >= 3 && numberOfClasses <= 5) {
+            return "Part Time";
+        }
+        return "Full Time";
+    }
+
+    private static void errorMessage(String error) {
+        System.out.println("Error: " + error);
+    }
+
+    private static void userMenu() {
+        // Provides a user menu for interacting with the program
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            try {
+                System.out.println("Choose an option: \n1. Process File \n2. Add Data \n3. Exit");
+                int choice = scanner.nextInt();
+                scanner.nextLine();
+
+                switch (choice) {
+                    case 1:
+                        processFileData("C:\\Users\\palic\\Desktop\\CCT\\Semester 1\\Programming_Object Orented Approach\\CA1\\students.txt"); // Assuming file in current directory
+                        break;
+                    case 2:
+                        addData(scanner);
+                        break;
+                    case 3:
+                        System.out.println("Exiting program.");
+                        return;
+                    default:
+                        System.out.println("Invalid choice. Please choose again.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a number.");
+                scanner.nextLine();
+            }
+        }
+    }
+
     private static void addData(Scanner scanner) {
         // Allows the user to add data directly via the console
         System.out.println("Enter student details: ");
@@ -155,9 +206,6 @@ public class CA1_sba23313 {
         if (validateData(firstName, secondName, numberOfClasses, studentNumber)) {
             writeDataToFile(studentNumber, secondName, numberOfClasses);
         }
-        
-        private static void errorMessage(String error) {
-        System.out.println("Error: " + error);
     }
 
 }
