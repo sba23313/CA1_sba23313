@@ -4,8 +4,11 @@
  */
 package ca1_sba23313;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 
 /**
  *
@@ -63,6 +66,51 @@ public class CA1_sba23313 {
             return false;
         }
         return true;
+    }
+    
+    private static void processFileData(String filePath) {
+        // Reads and processes student data
+        try ( BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String fullName;
+            while ((fullName = br.readLine()) != null) {
+                // Check if the full name is valid
+                if (fullName.trim().isEmpty() || !fullName.contains(" ")) {
+                    System.out.println("Invalid or missing full name. Skipping to next record.");
+                    br.readLine();
+                    br.readLine();
+                    continue;
+                }
+
+                // Check and validate the class number
+                String classNumberString = br.readLine();
+                if (classNumberString == null || classNumberString.trim().isEmpty()) {
+                    System.out.println("Missing or invalid number of classes for student: " + fullName + ". Skipping to next record.");
+                    br.readLine();
+                    continue;
+                }
+
+                // Check and validate the student number
+                String studentNumber = br.readLine();
+                if (studentNumber == null || studentNumber.trim().isEmpty()) {
+                    System.out.println("Missing student number for student: " + fullName + ". Skipping to next record.");
+                    continue;
+                }
+
+                String[] names = fullName.trim().split(" ");
+                String firstName = names[0];
+                String secondName = names[1];
+                int numberOfClasses = Integer.parseInt(classNumberString.trim());
+
+                // Validate the data and write to file if valid
+                if (validateData(firstName, secondName, numberOfClasses, studentNumber.trim())) {
+                    writeDataToFile(studentNumber.trim(), secondName, numberOfClasses);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("An error occurred while reading the file.");
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid number format in file. Please check the number of classes or student number format.");
+        }
     }
 
 }
