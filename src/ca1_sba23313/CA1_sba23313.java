@@ -9,6 +9,7 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Scanner;
 
 /**
  *
@@ -30,7 +31,7 @@ public class CA1_sba23313 {
             System.out.println("An error occurred while writing to the file.");
         }
     }
-    
+
     private static boolean validateData(String firstName, String secondName, int numberOfClasses, String studentNumber) {
         // Validates the input data based on given criteria
         if (!firstName.matches("[a-zA-Z]+")) {
@@ -67,7 +68,7 @@ public class CA1_sba23313 {
         }
         return true;
     }
-    
+
     private static void processFileData(String filePath) {
         // Reads and processes student data
         try ( BufferedReader br = new BufferedReader(new FileReader(filePath))) {
@@ -112,5 +113,47 @@ public class CA1_sba23313 {
             System.out.println("Invalid number format in file. Please check the number of classes or student number format.");
         }
     }
+
+    private static void addData(Scanner scanner) {
+        // Allows the user to add data directly via the console
+        System.out.println("Enter student details: ");
+
+        // Get and validate the first name
+        System.out.print("First Name: ");
+        String firstName = scanner.nextLine();
+        if (!firstName.matches("[a-zA-Z]+")) {
+            displayErrorMessage("Invalid first name. The first name should only contain letters.");
+            return;
+        }
+
+        // Get and validate the second name
+        System.out.print("Second Name: ");
+        String secondName = scanner.nextLine();
+        if (!secondName.matches("[a-zA-Z0-9 ]+")) {
+            displayErrorMessage("Invalid second name. The second name can contain letters and numbers.");
+            return;
+        }
+
+        // Get and validate the number of classes
+        System.out.print("Number of Classes (1-8): ");
+        if (!scanner.hasNextInt()) {
+            displayErrorMessage("Invalid input for number of classes. Please enter an integer.");
+            scanner.nextLine();
+            return;
+        }
+        int numberOfClasses = scanner.nextInt();
+        scanner.nextLine();
+
+        if (numberOfClasses < 1 || numberOfClasses > 8) {
+            displayErrorMessage("Invalid number of classes. Please choose from 1 to 8.");
+            return;
+        }
+
+        // Get and validate the student number
+        System.out.print("Student Number (ex: 25DAP123): ");
+        String studentNumber = scanner.nextLine();
+        if (validateData(firstName, secondName, numberOfClasses, studentNumber)) {
+            writeDataToFile(studentNumber, secondName, numberOfClasses);
+        }
 
 }
